@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Airbnb Search Widget</title>
+
+    <!-- Подключаем стили календаря -->
+    <link rel="stylesheet" href="/fl_min.css">
+    <link rel="stylesheet" href="/top_menu2.css">
+    <link rel="stylesheet" href="/top_menu_h.css">
+
+</head>
+<body>
+
+    <!-- Служебные данные для JS -->
+    <script id="start-coords" type="application/json">
+        {"lat": 55.75, "lng": 37.61, "main-place": "Москва"}
+    </script>
+    <div id="top-loader" class="top-loader"></div>
+    <!-- ДЕСКТОП ХЕДЕР -->
+    <header class="desktop-header">
+        <div class="header-left-group">
+            <a href="/" class="logo-link">
+                <img src="https://www.hotel24.ru/logo-mid.png" alt="Hotel24" class="main-logo">
+            </a>
+        </div>
+        <div class="search-widget-v2">
+            <div class="search-segment">
+                <label class="segment-label">Где</label>
+                <div style="position: relative; display: flex; align-items: center;">
+                    <input type="text" id="ac-input-desk" placeholder="Поиск направлений" autocomplete="off">
+                    <button class="btn-clear hidden" onclick="clearInput('ac-input-desk')">✕</button>
+                </div>
+                <div id="ac-results" class="hidden"></div>
+            </div>
+
+            <div class="search-segment" id="desk-date-trigger">
+                <label class="segment-label">Когда</label>
+                <div id="desk-date-display" class="segment-value">Добавить даты</div>
+                <input type="text" id="desk-date-input" style="display:none">
+            </div>
+
+            <div class="search-segment" id="guests-trigger" style="min-width: 120px;">
+                <label class="segment-label">Кто</label>
+                <div id="desk-guests-display" class="segment-value">2 гостей</div>
+                <!-- Выпадающее меню гостей -->
+                <div id="guests-dropdown" class="hidden">
+                    <!-- Взрослые -->
+                    <div class="guest-row" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px;">
+                        <div class="guest-info">
+                            <div style="font-weight:600;">Взрослые</div>
+                            <div style="font-size:12px; color:var(--grey);">От 13 лет</div>
+                        </div>
+                        <div class="counter">
+                            <button class="btn-c" onclick="changeG('desk', -1, 'adults')">-</button>
+                            <span id="cnt-desk-adults">2</span>
+                            <button class="btn-c" onclick="changeG('desk', 1, 'adults')">+</button>
+                        </div>
+                    </div>
+
+                    <!-- Дети -->
+                    <div class="guest-row" style="display:flex; justify-content:space-between; align-items:center;">
+                        <div class="guest-info">
+                            <div style="font-weight:600;">Дети</div>
+                            <div style="font-size:12px; color:var(--grey);">2–12 лет</div>
+                        </div>
+                        <div class="counter">
+                            <button class="btn-c" onclick="changeG('desk', -1, 'kids')">-</button>
+                            <span id="cnt-desk-kids">0</span>
+                            <button class="btn-c" onclick="changeG('desk', 1, 'kids')">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-search-v2" onclick="loadHotels()">
+                <svg viewBox="0 0 32 32" style="width:16px;height:16px;fill:none;stroke:#fff;stroke-width:4;"><path d="m13 24c6.07 0 11-4.92 11-11 0-6.07-4.92-11-11-11-6.07 0-11 4.92-11 11 0 6.07 4.92 11 11 11zm8-3 9 9"></path></svg>
+            </button>
+        </div>
+
+        <button class="btn-filters-main" onclick="openFilters()">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 2px;">
+                <svg viewBox="0 0 16 16" style="width:14px; height:14px; fill:currentColor;"><path d="M5 8c1.33 0 2.5.83 2.82 2H16v2H7.82c-.32 1.17-1.49 2-2.82 2s-2.5-.83-2.82-2H0v-2h2.18C2.5 8.83 3.67 8 5 8zm0 2c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm6-8c1.33 0 2.5.83 2.82 2H16v2h-2.18c-.32 1.17-1.49 2-2.82 2s-2.5-.83-2.82-2H0V4h8.18C8.5 2.83 9.67 2 11 2zm0 2c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"></path></svg>
+                <span style="font-weight: 600; font-size: 13px;">Фильтры</span>
+            </div>
+            <!-- Информер цены внутри кнопки -->
+            <div id="p-txt-desktop" style="font-size: 11px; color: var(--grey); white-space: nowrap;">
+                до 150 000 ₽
+            </div>
+        </button>
+
+        <div class="header-actions">
+            <!-- Кнопка меню -->
+            <button class="btn-menu-only" onclick="toggleMainMenu()" id="mainMenuBtn">
+                <svg viewBox="0 0 32 32" xmlns="http://www.w3.org" style="display:block; fill:none; height:18px; width:18px; stroke:currentColor; stroke-width:3; overflow:visible;">
+                    <g fill="none"><path d="m2 16h28"></path><path d="m2 24h28"></path><path d="m2 8h28"></path></g>
+                </svg>
+
+            </button>
+
+            <!-- Выпадающий список -->
+            <div id="mainMenuDropdown" class="menu-dropdown hidden">
+
+                <a href="/contact" class="menu-item">Контакт</a>
+                <hr>
+                <a href="/about" class="menu-item">О нас</a>
+
+            </div>
+        </div>
+
+    </header>
+
+    <!-- МОБИЛЬНЫЙ ХЕДЕР -->
+    <header class="mobile-header">
+        <div id="mobile-header-content" style="display: flex; align-items: center; gap: 10px;">
+            <!-- Поиск -->
+            <div class="search-stub" onclick="openMobSearch()">
+                <svg viewBox="0 0 32 32" style="width:18px;height:18px;stroke:#222;stroke-width:4;fill:none;"><path d="m13 24c6.07 0 11-4.92 11-11 0-6.07-4.92-11-11-11-6.07 0-11 4.92-11 11 0 6.07 4.92 11 11 11zm8-3 9 9"></path></svg>
+                <div class="stub-text" style="overflow: hidden; white-space: nowrap;">
+                    <b style="display: block; text-overflow: ellipsis; overflow: hidden;">Куда едем?</b>
+                    <span id="mob-stub-info" style="font-size: 12px; color: #717171;">Везде • Когда угодно</span>
+                </div>
+            </div>
+
+            <!-- Кнопка (теперь она точно будет справа) -->
+            <button class="btn-mob-filters" onclick="openFilters()">
+                <svg viewBox="0 0 16 16" style="width:18px; height:18px;"><path d="M5 8c1.33 0 2.5.83 2.82 2H16v2H7.82c-.32 1.17-1.49 2-2.82 2s-2.5-.83-2.82-2H0v-2h2.18C2.5 8.83 3.67 8 5 8zm0 2c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm6-8c1.33 0 2.5.83 2.82 2H16v2h-2.18c-.32 1.17-1.49 2-2.82 2s-2.5-.83-2.82-2H0V4h8.18C8.5 2.83 9.67 2 11 2zm0 2c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"></path></svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- МОБИЛЬНЫЙ ОВЕРЛЕЙ -->
+    <div id="mobOverlay" class="full-search-overlay">
+        <div style="padding: 20px;">
+            <button onclick="closeMobSearch()" style="border:none; background:none; font-size:24px;">✕</button>
+            <h2 style="margin-top:20px;">Поиск поездки</h2>
+        </div>
+        <div class="modal-card">
+            <label class="segment-label">Куда</label>
+            <div style="position: relative; display: flex; align-items: center;">
+                <input type="text" id="ac-input-mob" placeholder="Поиск направлений" autocomplete="off" style="width:100%;">
+                <button class="btn-clear hidden" onclick="clearInput('ac-input-mob')">✕</button>
+            </div>
+            <div id="ac-results-mob" class="hidden"></div>
+        </div>
+        <div class="modal-card">
+            <label class="segment-label">Когда</label>
+            <div id="mob-date-display">Добавить даты</div>
+        </div>
+        <!-- МОБИЛЬНЫЙ ОВЕРЛЕЙ: Блок Гости -->
+        <div class="modal-card">
+            <div style="margin-bottom: 20px; font-weight: 800;">Кто едет</div>
+
+            <!-- Взрослые -->
+            <div class="guest-row" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+                <div class="guest-info">
+                    <div style="font-weight:600;">Взрослые</div>
+                    <div style="font-size:13px; color:var(--grey);">От 13 лет</div>
+                </div>
+                <div class="counter">
+                    <button class="btn-c" onclick="changeG('mob', -1, 'adults')">-</button>
+                    <span id="cnt-mob-adults" style="min-width: 20px; text-align: center; font-weight: 600;">2</span>
+                    <button class="btn-c" onclick="changeG('mob', 1, 'adults')">+</button>
+                </div>
+            </div>
+
+            <!-- Дети -->
+            <div class="guest-row" style="display:flex; justify-content:space-between; align-items:center;">
+                <div class="guest-info">
+                    <div style="font-weight:600;">Дети</div>
+                    <div style="font-size:13px; color:var(--grey);">2–12 лет</div>
+                </div>
+                <div class="counter">
+                    <button class="btn-c" onclick="changeG('mob', -1, 'kids')">-</button>
+                    <span id="cnt-mob-kids" style="min-width: 20px; text-align: center; font-weight: 600;">0</span>
+                    <button class="btn-c" onclick="changeG('mob', 1, 'kids')">+</button>
+                </div>
+            </div>
+        </div>
+        <div style="padding:20px;">
+            <button onclick="loadHotels(); closeMobSearch();" style="width:100%; background:var(--red); color:#fff; border:none; padding:15px; border-radius:12px; font-weight:800;">Найти</button>
+        </div>
+    </div>
+
+
+
+    <!-- Затемнение фона -->
+    <div id="hotel-detail-overlay" class="hidden" onclick="closeHotelDetail()"></div>
+
+    <!-- Выезжающая панель -->
+    <div id="hotel-detail-panel" class="side-panel hidden">
+        <button class="btn-close-panel" onclick="closeHotelDetail()">✕</button>
+
+        <!-- Сюда JS вставит слайдер и описание -->
+        <div id="hotel-detail-dynamic" class="panel-inner-content"></div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- ОСНОВНОЙ КОНТЕНТ -->
+    <div class="app-layout">
+        <main id="main-scroll">
+
+            <div class="breadcrumb-area">
+                <!-- Хлебные крошки -->
+                <nav class="breadcrumbs">
+                    <a href="/">Главная</a>
+                    <span class="br-sep">/</span>
+                    <a href="/russia">Россия</a>
+                    <span class="br-sep">/</span>
+                    <span id="br-city" class="br-current">Москва</span>
+                </nav>
+
+                <!-- Информативный заголовок -->
+                <h1 class="main-h1">
+                    <span id="res-count-v2">Загрузка...</span> вариантов в г. <span id="h1-location">Москва</span>
+                </h1>
+
+                <p class="h1-subtitle">Проверьте даты, чтобы увидеть актуальные цены и наличие</p>
+            </div>
+
+            <div id="grid">
+                <!-- Карточки отелей вставляются сюда через JS -->
+            </div>
+            <div id="pagination-container" class="pagination-area">
+                <!-- Сюда JS вставит кнопки страниц -->
+            </div>
+
+            <div id="sentinel" style="height: 50px;"></div>
+            <footer class="app-footer">
+                <div class="footer-container">
+                    <div class="footer-section main-info">
+                        <span class="copyright">© 2026 hotel24.ru.</span>
+
+                        <span class="dot">·</span>
+                        <a href="/aboutus">О нас</a>
+                        <span class="">·</span>
+                        <a href="/contact">Контакт</a>
+                    </div>
+
+                    <div class="footer-section settings">
+                        <button class="footer-btn">
+                            <span class="icon">🌐</span> Русский (RU)
+                        </button>
+                        <button class="footer-btn">
+                            ₽ <span class="currency">RUB</span>
+                        </button>
+
+                    </div>
+                </div>
+            </footer>
+
+        </main>
+
+        <div id="y-map"></div>
+
+        <div id="hotel-detail-overlay" class="hidden" onclick="closeHotelDetail()"></div>
+
+        <!-- Выезжающая панель с деталями -->
+        <div id="hotel-detail-panel" class="side-panel hidden">
+            <button class="btn-close-panel" onclick="closeHotelDetail()">✕</button>
+
+            <div class="panel-content">
+
+
+                <!-- Контент будет вставляться через JS -->
+                <div id="hotel-detail-dynamic">
+                    <div class="panel-loader">Загрузка...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button id="map-toggle-btn" class="map-mobile-btn" onclick="toggleMobileMap()">
+        <span id="map-btn-text">Карта</span>
+        <svg viewBox="0 0 32 32" style="width:16px;height:16px;fill:currentColor;margin-left:8px;"><path d="M31.25 26.17l-9.25-18.5a3 3 0 0 0-5.36 0l-9.25 18.5a1 1 0 0 0 .89 1.45h22.08a1 1 0 0 0 .89-1.45z"></path></svg>
+    </button>
+    <div id="filter-modal" class="filter-overlay hidden">
+        <div class="filter-modal-content">
+            <div class="filter-header">
+                <button class="btn-close" onclick="closeFilters()">✕</button>
+                <span style="font-weight: 800; font-size: 16px;">Фильтры</span>
+                <div style="width: 24px;"></div> <!-- для центровки заголовка -->
+            </div>
+
+            <div class="filter-body">
+                <!-- Секция: Диапазон цен -->
+                <div class="filter-section">
+                    <h3>Диапазон цен</h3>
+                    <p style="color: var(--grey); font-size: 14px; margin-bottom: 20px;">Средняя цена за ночь: 12 500 ₽</p>
+                    <div class="price-input-group">
+                        <div class="price-field">
+                            <span>Макс. цена</span>
+                            <div id="p-txt-modal">150 000 ₽</div>
+                        </div>
+                    </div>
+                    <input type="range" id="p-rng-modal" min="1000" max="150000" step="500" value="150000"
+                           oninput="updatePriceModal(this.value)" style="width: 100%; accent-color: #222; margin-top: 20px;">
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 24px 0;">
+
+                <!-- Секция: Тип жилья -->
+                <div class="filter-section">
+                    <h3>Тип жилья</h3>
+                    <div id="type-filters-modal" class="type-grid">
+                        <!-- Сюда JS отрисует чекбоксы из функции updateFiltersUI -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-footer">
+                <button class="btn-clear-all" onclick="clearAllFilters()">Очистить всё</button>
+                <button class="btn-apply" onclick="applyFilters()">Показать варианты</button>
+            </div>
+        </div>
+    </div>
+    <div id="search-backdrop" class="search-backdrop hidden"></div>
+    <script src="/fl_js.js"></script>
+    <script src="/flru.js"></script>
+
+    <!-- 1. Сначала утилиты и конфиги -->
+    <script src="/js/utils.js"></script>
+    <!-- 2. Затем наши новые сервисы (они независимы) -->
+    <script src="/js/SearchService.js"></script>
+    <script src="/js/FilterService.js"></script>
+    <script src="/js/ApiService.js"></script>
+    <script src="/js/RouterService.js"></script>
+    <!-- 3. Затем модули отображения -->
+    <script src="/js/MapModule.js"></script>
+    <script src="/js/ListModule.js"></script>
+
+    <script src="/js/HotelDetailService.js"></script>
+    <!-- 4. И в самом конце — этот каркас ref.js -->
+    <script src="/js/ref.js"></script>
+
+
+</body>
+</html>
