@@ -1,0 +1,599 @@
+/* RESET ДЛЯ ВАШЕГО МАКЕТА */
+.side-panel * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.panel-content-padding {
+    padding: 24px 32px 40px 32px;
+}
+
+/* Фикс для кнопки закрытия */
+.btn-close-panel svg {
+    display: block;
+}
+
+#hotel-detail-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 2999;
+    transition: opacity 0.3s ease;
+    display: block;
+    opacity: 1;
+    transition: opacity 0.4s ease;
+}
+
+    #hotel-detail-overlay.hidden {
+        display: none;
+        opacity: 0;
+    }
+
+.side-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 600px;
+    height: 100vh;
+    background: #fff;
+    z-index: 3000;
+    box-shadow: -10px 0 40px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+    transform: translateX(0); /* Состояние "открыто" */
+}
+
+    .side-panel.hidden {
+        display: flex; /* Не даем исчезнуть мгновенно */
+        transform: translateX(100%);
+    }
+
+.panel-inner-content {
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+/* --- 2. СЛАЙДЕР (ГАЛЕРЕЯ) - ИСПРАВЛЕНО --- */
+.hotel-slideshow {
+    position: relative;
+    width: 100%;
+    height: 300px; /* УМЕНЬШЕННАЯ ВЫСОТА */
+    background: #000;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.slides-container {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth; /* ДЛЯ РАБОТЫ JS */
+    height: 100%;
+    width: 100%;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+    .slides-container::-webkit-scrollbar {
+        display: none;
+    }
+
+.gallery-slide {
+    flex: 0 0 100%; /* ЗАПРЕТ СЖАТИЯ */
+    width: 100%;
+    height: 100%;
+    scroll-snap-align: start;
+}
+
+    .gallery-slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* СОХРАНЕНИЕ ПРОПОРЦИЙ */
+        display: block;
+    }
+
+.slides-dots {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+    z-index: 10;
+    padding: 5px 10px;
+    background: rgba(0,0,0,0.4);
+    border-radius: 20px;
+}
+
+.dot {
+    width: 7px;
+    height: 7px;
+    background: rgba(255,255,255,0.4);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+    .dot.active {
+        background: #fff;
+        transform: scale(1.2);
+    }
+
+.slide-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.85);
+    cursor: pointer;
+    z-index: 5;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+    .slide-nav:hover {
+        background: #fff;
+    }
+
+    .slide-nav.prev {
+        left: 10px;
+    }
+
+    .slide-nav.next {
+        right: 10px;
+    }
+
+/* --- 3. КАРТОЧКА НОМЕРА --- */
+.room-card-v2 {
+    display: flex;
+    margin-top: 16px;
+    border: 1px solid #ebebeb;
+    border-radius: 12px;
+    overflow: hidden;
+    min-height: 140px;
+    transition: 0.2s ease-in-out;
+}
+
+    .room-card-v2:hover {
+        border-color: #ff385c;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+
+.room-img {
+    width: 160px; /* ЧУТЬ МЕНЬШЕ ШИРИНА */
+    height: auto;
+    flex-shrink: 0;
+    background: #f3f3f3;
+}
+
+    .room-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+.room-details {
+    padding: 14px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.room-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.room-details h4 {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #222;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.room-price-val {
+    font-size: 17px;
+    font-weight: 800;
+    color: #222;
+    white-space: nowrap;
+}
+
+.room-meta {
+    font-size: 12px;
+    color: #717171;
+    margin-bottom: 6px;
+}
+
+.room-amenities-tags {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+    .room-amenities-tags span {
+        font-size: 10px;
+        background: #f7f7f7;
+        padding: 2px 6px;
+        border-radius: 4px;
+        border: 1px solid #eee;
+    }
+
+.cancel-warn {
+    color: #d32f2f;
+    font-weight: 600;
+}
+
+.cancel-ok {
+    color: #2e7d32;
+    font-weight: 600;
+}
+
+.room-footer-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+}
+
+.price-per-night {
+    font-size: 12px;
+    color: #717171;
+}
+
+.btn-room-select {
+    background: #222;
+    color: #fff;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* --- 4. ЗАКРЫТИЕ И ФУТЕР --- */
+.btn-close-panel {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    cursor: pointer;
+    z-index: 3100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.detail-sticky-footer {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    padding: 16px 32px;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 20;
+}
+
+.btn-book-now {
+    background: #ff385c;
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* --- 5. АДАПТИВНОСТЬ --- */
+@media (max-width: 768px) {
+    .side-panel {
+        width: 100%;
+        /* 1. Оставляем место сверху под ваш поиск (замените 60px на высоту вашего поиска) */
+        height: calc(100vh - 80px);
+        top: 80px;
+        /* 2. Уменьшаем z-index панели, чтобы она была ПОД поиском, 
+           но НАД картой и списком отелей */
+        z-index: 2500;
+        border-radius: 20px 20px 0 0; /* Скругляем верхние углы для стиля 2026 */
+        box-shadow: 0 -10px 30px rgba(0,0,0,0.1);
+    }
+
+    .hotel-slideshow {
+        height: 220px;
+    }
+    /* ЕЩЕ МЕНЬШЕ НА МОБИЛЬНЫХ */
+    .room-card-v2 {
+        flex-direction: column;
+    }
+
+    .room-img {
+        width: 100%;
+        height: 160px;
+    }
+
+
+
+
+     
+
+    /* 3. Оверлей тоже должен начинаться под поиском, чтобы по нему можно было кликнуть */
+    #hotel-detail-overlay {
+        top: 80px;
+        z-index: 2499;
+    }
+
+    .btn-close-panel,
+    .btn-back-to-search {
+        display: none !important;
+    }
+}
+
+
+/* --- PRELOADER (SKELETON) --- */
+.panel-loader {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.skeleton-room {
+    display: flex;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    height: 140px;
+    overflow: hidden;
+}
+
+.skeleton-img {
+    width: 160px;
+    height: 100%;
+    background: #f0f0f0;
+}
+
+.skeleton-info {
+    flex: 1;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.skeleton-line {
+    height: 12px;
+    background: #f0f0f0;
+    border-radius: 4px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+}
+
+    .skeleton-line.title {
+        width: 60%;
+        height: 18px;
+    }
+
+    .skeleton-line.text {
+        width: 40%;
+    }
+
+    .skeleton-line.last {
+        width: 30%;
+        margin-top: auto;
+    }
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .skeleton-room {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .skeleton-img {
+        width: 100%;
+        height: 160px;
+    }
+}
+
+
+.location-brief {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 13px;
+    color: #484848;
+}
+
+.metro-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.metro-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #f7f7f7;
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+
+.metro-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.metro-name {
+    font-weight: 500;
+}
+
+.metro-dist {
+    color: #717171;
+    font-size: 12px;
+}
+
+.center-dist {
+    padding: 4px 0;
+    color: #717171;
+}
+
+.room-img-container {
+    width: 200px; /* Фиксированная ширина блока фото */
+    height: 160px;
+    position: relative;
+    flex-shrink: 0;
+    overflow: hidden;
+    background: #f3f3f3;
+}
+
+.room-slides {
+    display: flex;
+    height: 100%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+}
+
+    .room-slides::-webkit-scrollbar {
+        display: none;
+    }
+
+.room-slide {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+    scroll-snap-align: start;
+}
+
+    .room-slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+/* Кнопки навигации внутри фото номера */
+.room-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.8);
+    border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    font-size: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+    .room-nav.prev {
+        left: 5px;
+    }
+
+    .room-nav.next {
+        right: 5px;
+    }
+
+@media (max-width: 768px) {
+    .room-img-container {
+        width: 100%;
+        height: 200px;
+    }
+}
+
+
+.hotel-detail-map {
+    width: 100%;
+    height: 200px;
+    margin: 20px 0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #f0f0f0;
+    border: 1px solid #eee;
+}
+
+/* Скрываем копирайты, если карта слишком маленькая (опционально) */
+.ymaps-2-1-79-copyright__wrap {
+    display: none !important;
+}
+
+
+.btn-header-back {
+    background: none;
+    border: none;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0; /* Не даем кнопке сжиматься */
+    animation: slideInLeft 0.3s cubic-bezier(0.2, 0, 0, 1);
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Настраиваем гибкость поиска, чтобы он сужался под кнопку */
+.search-stub {
+    flex: 1;
+    min-width: 0; /* Важно для работы text-overflow внутри */
+}
