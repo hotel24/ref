@@ -1,17 +1,669 @@
+/* 
+ * HOTEL24 CORE STYLES 2026 (AIRBNB STYLE)
+ * Поддерживает модули: Search, Filter, Map, List, HotelDetail
+ */
+
 :root {
-    --red: #ff385c;
+    --brand: #ff385c;
+    --brand-dark: #bd1e59;
+    --text: #222222;
     --grey: #717171;
-    --border: #dddddd;
+    --border: #ebebeb;
+    --bg-light: #f7f7f7;
+    --radius-lg: 32px;
+    --radius-sm: 12px;
+    --shadow: 0 6px 16px rgba(0,0,0,0.12);
 }
 
-html, body {
-    font-family: 'Circular', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+* {
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+}
+
+body, html {
     margin: 0;
-    color: #222;
     padding: 0;
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    color: var(--text);
+    background: #fff;
     height: 100%;
+}
+
+/* --- 1. ВЕРХНЯЯ ПАНЕЛЬ (Desktop Header) --- */
+.desktop-header {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    border-bottom: 1px solid var(--border);
+    background: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.search-widget-v2 {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 40px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+    height: 66px;
+    padding: 0 8px;
+    transition: box-shadow 0.2s;
+}
+
+    .search-widget-v2:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+
+.search-segment {
+    padding: 10px 24px;
+    cursor: pointer;
+    border-radius: 32px;
+    position: relative;
+    min-width: 140px;
+}
+
+    .search-segment:hover {
+        background: var(--bg-light);
+    }
+
+    .search-segment:after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 15px;
+        bottom: 15px;
+        width: 1px;
+        background: var(--border);
+    }
+
+    .search-segment:last-of-type:after {
+        display: none;
+    }
+
+.segment-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 800;
+    margin-bottom: 2px;
+}
+
+.search-segment input {
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 14px;
+    width: 100%;
+    color: var(--text);
+    font-weight: 400;
+}
+
+.btn-search-v2 {
+    background: var(--brand);
+    border: none;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-left: 8px;
+    transition: background 0.2s;
+}
+
+    .btn-search-v2:hover {
+        background: var(--brand-dark);
+    }
+
+/* --- 2. ОСНОВНОЙ КОНТЕНТ (Карта + Список) --- */
+.app-content {
+    display: flex;
+    height: calc(100vh - 80px);
+    width: 100%;
+}
+
+.results-side {
+    flex: 1 1 60%;
+    overflow-y: auto;
+    padding: 24px 40px;
+}
+
+.map-side {
+    flex: 1 1 40%;
+    height: 100%;
+    position: sticky;
+    top: 0;
+}
+
+/* --- 3. ГРИД И КАРТОЧКИ (ListModule) --- */
+#hotels-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 32px 24px;
+    margin-top: 24px;
+}
+
+.hotel-card {
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+    .hotel-card:hover {
+        transform: translateY(-4px);
+    }
+
+.card-image-wrapper {
+    position: relative;
+    aspect-ratio: 1/1;
+    border-radius: var(--radius-sm);
     overflow: hidden;
 }
+
+.card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-rating {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #fff;
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 13px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card-info {
+    padding: 12px 0;
+}
+
+.card-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.card-location {
+    color: var(--grey);
+    font-size: 14px;
+    margin: 4px 0;
+}
+
+.price-val {
+    font-weight: 800;
+    font-size: 16px;
+}
+
+ 
+
+/* --- 5. АВТОКОМПЛИТ (SearchService) --- */
+.ac-results {
+    position: absolute;
+    top: 75px;
+    left: 0;
+    width: 400px;
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    padding: 16px 0;
+    z-index: 2000;
+    border: 1px solid #eee;
+}
+
+    .ac-results.hidden {
+        display: none;
+    }
+
+.ac-item-hotel24 {
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+    .ac-item-hotel24:hover {
+        background: var(--bg-light);
+    }
+
+.ac-icon {
+    margin-right: 12px;
+    font-size: 18px;
+}
+
+/* --- 6. МОБИЛЬНЫЙ ХЕДЕР --- */
+.mobile-header {
+    display: none;
+    height: 80px;
+    padding: 0 20px;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 1000;
+}
+
+.search-stub {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    border-radius: 40px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* --- 7. МОДАЛЬНОЕ ОКНО --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+    .modal-overlay.active {
+        display: flex;
+    }
+
+.modal-container {
+    background: #fff;
+    width: 90%;
+    max-width: 1000px;
+    height: 90vh;
+    border-radius: 16px;
+    position: relative;
+    overflow-y: auto;
+}
+
+/* --- 8. ЛОАДЕР --- */
+#global-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--brand);
+    z-index: 99999;
+    transform: translateX(-100%);
+    transition: transform 0.2s;
+}
+
+    #global-loader.active {
+        animation: loading 2s infinite;
+    }
+
+@keyframes loading {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    50% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* --- 9. АДАПТИВНОСТЬ --- */
+@media (max-width: 1024px) {
+    .desktop-header {
+        display: none;
+    }
+
+    .mobile-header {
+        display: flex;
+    }
+
+    .app-content {
+        flex-direction: column;
+        overflow-y: auto;
+        height: auto;
+    }
+
+    .map-side {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 500; /* Ниже оверлея поиска, но выше списка */
+        transform: translateY(100%); /* Уводим вниз */
+        transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+        background: #fff;
+        visibility: hidden;
+    }
+
+        /* 2. Когда карта активна (нажали кнопку) */
+        .map-side.map-active {
+            transform: translateY(0);
+            visibility: visible;
+        }
+
+    /* 3. Список отелей всегда на виду */
+    .results-side {
+        width: 100% !important;
+        flex: none !important;
+        display: block;
+    }
+
+    #hotels-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.hidden {
+    display: none !important;
+}
+
+
+/* --- КНОПКА ПЕРЕКЛЮЧЕНИЯ КАРТА/СПИСОК --- */
+
+.btn-map-toggle {
+    position: fixed;
+    bottom: 30px; /* Отступ от нижнего края */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1500; /* Выше списка и карты, но ниже оверлеев поиска */
+    
+    background: #222222; /* Глубокий черный Airbnb */
+    color: #ffffff;
+    
+    display: none; /* По умолчанию скрыта на десктопе */
+    align-items: center;
+    gap: 10px;
+    
+    padding: 12px 20px;
+    border-radius: 24px;
+    border: 1px solid rgba(255,255,255,0.1);
+    
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    
+    transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), background 0.2s;
+}
+
+.btn-map-toggle:active {
+    transform: translateX(-50%) scale(0.92); /* Эффект нажатия */
+    background: #000;
+}
+
+.btn-map-toggle svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+}
+
+/* --- МОБИЛЬНАЯ АДАПТАЦИЯ --- */
+@media (max-width: 1024px) {
+    .btn-map-toggle {
+        display: flex; /* Показываем только на мобилках и планшетах */
+    }
+
+    /* Если карта открыта, кнопка может менять стиль (опционально) */
+    .btn-map-toggle.is-map-view {
+        background: #222;
+    }
+}
+
+
+/* --- МОБИЛЬНЫЙ ОВЕРЛЕЙ ПОИСКА (Airbnb Style) --- */
+
+.full-search-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #f7f7f7;
+    z-index: 2000;
+    display: none; /* Скрыт по умолчанию */
+    flex-direction: column;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease-out;
+}
+
+.full-search-overlay.active {
+    display: flex;
+}
+
+/* Анимация появления снизу */
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
+/* Карточки этапов поиска (Куда, Когда, Кто) */
+.modal-card {
+    background: #fff;
+    margin: 12px 20px;
+    padding: 20px;
+    border-radius: 24px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.05);
+}
+
+    .modal-card input {
+        border: none;
+        outline: none;
+        font-size: 18px;
+        font-weight: 600;
+        width: 100%;
+        padding: 8px 0;
+        background: transparent;
+    }
+
+/* Результаты подсказок в мобилке */
+#ac-results-mob {
+    margin-top: 10px;
+    border-top: 1px solid #eee;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.ac-item-hotel24 {
+    padding: 15px 0;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+/* Кнопки счетчика (Взрослые/Дети) */
+.counter {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.btn-c {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid #b0b0b0;
+    background: #fff;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #222;
+}
+
+    .btn-c:active {
+        transform: scale(0.9);
+        border-color: #222;
+    }
+
+/* Нижняя панель с кнопкой "Поиск" */
+.mob-search-footer {
+    position: sticky;
+    bottom: 0;
+    background: #fff;
+    padding: 16px 24px;
+    border-top: 1px solid #ebebeb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+}
+
+.btn-search-submit {
+    background: var(--brand);
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+/* Скрытие элементов, если нужно */
+.hidden {
+    display: none !important;
+}
+
+/* --- ГЛОБАЛЬНОЕ УПРАВЛЕНИЕ ВИДИМОСТЬЮ --- */
+
+#mobOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    z-index: 5000;
+    /* КРИТИЧНО: Прячем и уводим вниз */
+    display: none;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+    /* Состояние при открытии — ПОИСК ПОКАЗАН */
+    #mobOverlay.active {
+        display: flex;
+        transform: translateY(0);
+    }
+
+
+
+/* Скрываем мобильные элементы на десктопе (экран > 1024px) */
+@media (min-width: 1025px) {
+    .mobile-header,
+    .full-search-overlay,
+    #mobOverlay,
+    .btn-mob-filters {
+        display: none !important;
+    }
+}
+
+/* Скрываем десктопные элементы на мобилке (экран < 1024px) */
+@media (max-width: 1024px) {
+    .desktop-header,
+    .search-widget-v2,
+    .header-left-group {
+        display: none !important;
+    }
+
+    /* Показываем мобильный хедер */
+    .mobile-header {
+        display: flex !important;
+    }
+}
+
+/* Состояние активного оверлея (только для мобилок) */
+@media (max-width: 1024px) {
+    .full-search-overlay.active {
+        display: flex !important;
+        position: fixed;
+        z-index: 9999;
+    }
+}
+
+
+.btn-filters-main {
+    border: 1px solid var(--border);
+    background: #fff;
+    border-radius: 12px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: box-shadow 0.2s, border-color 0.2s;
+    min-width: 140px;
+    text-align: left;
+}
+
+    .btn-filters-main:hover {
+        border-color: #222;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+#p-txt-desktop {
+    color: var(--grey);
+    font-size: 11px;
+    margin-top: 2px;
+    font-weight: 500;
+}
+
+
+.btn-mob-filters {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    color: #222;
+    flex-shrink: 0; /* Чтобы кнопка не сжималась */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+    .btn-mob-filters:active {
+        background: #f7f7f7;
+        transform: scale(0.95);
+    }
+
+/* Скрываем её на десктопе, если она случайно там окажется */
+@media (min-width: 1025px) {
+    .btn-mob-filters {
+        display: none;
+    }
+}
+ 
+ 
+
+
+
+
+
+
+
+
+
+
 
 /* Стили меток на карте */
 .map-price-tag {
@@ -49,548 +701,12 @@ html, body {
         color: white !important;
         border-color: #005bff !important;
         transform: translate(-50%, -100%) scale(1.1); /* Немного увеличим для акцента */
-        z-index: 99999!important;
+        z-index: 99999 !important;
     }
 
         .map-price-tag.active::after {
             border-top-color: var(--ya-blue);
         }
-
-.desktop-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 24px;
-    height: 80px;
-    background: #fff;
-    border-bottom: 1px solid var(--light-grey);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-.logo-link {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    flex-shrink: 0; /* Чтобы лого не сжималось */
-}
-
-.main-logo {
-    height: 40px; /* Оптимальная высота для хедера 80px */
-    width: auto;
-    object-fit: contain;
-    transition: opacity 0.2s;
-}
-
-    .main-logo:hover {
-        opacity: 0.8;
-    }
-
-/* Если логотип слишком прижат к поиску */
-.header-left-group {
-    margin-right: 20px;
-}
-
-/* 2. Ограничиваем виджет, чтобы он не растягивался сам по себе */
-.search-widget-v2 {
-    overflow: auto;
-    display: inline-flex !important; /* Заставляет виджет сжиматься по контенту */
-    align-items: center;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 32px;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
-    height: 58px;
-    cursor: pointer;
-}
-
-/* 1. ПОДЛОЖКА (BACKDROP) */
-#search-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.2); /* Легкое затемнение */
-    backdrop-filter: blur(4px); /* Размытие контента сзади */
-    z-index: 900; /* Выше карты, но ниже поиска */
-    transition: opacity 0.3s ease;
-}
-
-/* 2. КОНТЕЙНЕР ВСЕЙ СТРОКИ ПОИСКА */
-.search-bar-container {
-    display: flex;
-    align-items: center;
-    background: #fff;
-    border: 1px solid #ebebeb;
-    border-radius: 32px;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
-    position: relative;
-    z-index: 1001; /* Всегда выше подложки */
-    max-width: 850px;
-    margin: 0 auto;
-}
-
-/* 3. СЕГМЕНТ (Блок: Куда, Даты или Гости) */
-.search-segment {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    padding: 14px 32px;
-    cursor: pointer;
-    border-radius: 32px;
-    flex: 1;
-    transition: all 0.2s ease;
-}
-
-    /* Эффект при наведении на неактивный сегмент */
-    .search-segment:hover {
-        background-color: #EBEBEB;
-    }
-
-    /* АКТИВНЫЙ СЕГМЕНТ (когда нажат) */
-    .search-segment.is-active {
-        background-color: #ffffff !important;
-        box-shadow: 0 6px 20px rgba(0,0,0,0.15); /* "Приподнимаем" блок */
-        z-index: 1010; /* Выше остальных сегментов и подложки */
-    }
-
-    /* 4. ТЕКСТ ВНУТРИ СЕГМЕНТА */
-    .search-segment label {
-        font-size: 12px;
-        font-weight: 800;
-        color: #222;
-        margin-bottom: 2px;
-        pointer-events: none; /* Клик проходит насквозь на сегмент */
-    }
-
-    .search-segment input,
-    .search-segment .display-value {
-        border: none;
-        background: transparent;
-        font-size: 14px;
-        color: #717171;
-        outline: none;
-        width: 100%;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
-    }
-
-    .search-segment.is-active input,
-    .search-segment.is-active .display-value {
-        color: #222; /* Делаем текст черным в активном поле */
-    }
-
-/* 5. ВЫПАДАЮЩИЕ СПИСКИ (Результаты, Календарь, Гости) */
-#ac-results,
-#ac-results-mob,
-#guests-dropdown,
-.flatpickr-calendar {
-    position: absolute;
-    top: 110% !important; /* Чуть ниже строки поиска */
-    left: 0;
-    z-index: 1100 !important; /* Самый верхний слой */
-    background: #fff;
-    border-radius: 24px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    border: 1px solid #ebebeb;
-}
-
-/* 6. РАЗДЕЛИТЕЛЬНЫЕ ЛИНИИ (Вертикальные палочки) */
-.search-segment:not(:last-child)::after {
-    content: "";
-    position: absolute;
-    right: 0;
-    top: 20%;
-    height: 60%;
-    width: 1px;
-    background-color: #ddd;
-}
-
-/* Прячем палочку, если сегмент активен или наведен */
-.search-segment.is-active::after,
-.search-segment:hover::after,
-.search-segment:has(+ .search-segment:hover)::after,
-.search-segment:has(+ .search-segment.is-active)::after {
-    opacity: 0;
-}
-
-/* 7. КНОПКА ПОИСКА (Круглая лупа в конце) */
-.btn-main-search {
-    background: #FF385C; /* Розовый Airbnb */
-    color: #fff;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 8px;
-    border: none;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-}
-
-    .btn-main-search:hover {
-        transform: scale(1.05);
-    }
-
-.hidden {
-    display: none !important;
-}
-
-
-    .search-segment:last-of-type {
-        border-right: none;
-    }
-
-.segment-label {
-    font-size: 12px;
-    font-weight: 800;
-    display: block;
-}
-
-.segment-value, input {
-    font-size: 14px;
-    color: var(--grey);
-    border: none;
-    outline: none;
-    background: transparent;
-    padding: 4px 0;
-    width: 140px;
-}
-
-.btn-search-v2 {
-    background: var(--red);
-    border: none;
-    border-radius: 50%;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: 8px;
-    margin-right: 8px;
-    flex-shrink: 0;
-}
-
-
-
-/* ХЕДЕР МОБАЙЛ */
-.mobile-header {
-    display: block; /* Показываем только на мобилках */
-    padding: 12px 16px;
-    background: #fff;
-    border-bottom: 1px solid #eee;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-    /* Контейнер внутри хедера */
-    .mobile-header > div {
-        display: flex !important;
-        flex-direction: row !important; /* Строго в ряд */
-        align-items: center !important;
-        justify-content: space-between;
-        gap: 12px;
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-/* По умолчанию скрываем мобильный хедер и кнопку фильтров */
-.mobile-header, .btn-mob-filters, .map-mobile-btn {
-    display: none !important;
-}
-
-/* Показываем их только на мобильных устройствах */
-@media (max-width: 1023px) {
-    .mobile-header {
-        display: block !important;
-    }
-
-    .btn-mob-filters {
-        display: flex !important;
-    }
-
-    .map-mobile-btn {
-        display: flex !important;
-    }
-    /* Скрываем десктопный хедер на мобилках */
-    .desktop-header {
-        display: none !important;
-    }
-}
-
-/* Для десктопа (от 1024px и выше) */
-@media (min-width: 1024px) {
-    .desktop-header {
-        display: flex !important;
-    }
-
-    .mobile-header {
-        display: none !important;
-    }
-}
-
-
-
-
-.search-stub {
-    flex-grow: 1; /* Занимает всё свободное место */
-    flex-shrink: 1;
-    min-width: 0; /* Важно для корректного сжатия текста внутри flex */
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    border: 1px solid #ddd;
-    padding: 8px 16px;
-    border-radius: 30px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-}
-
-.btn-mob-filters {
-    flex-shrink: 0; /* ЗАПРЕЩАЕТ кнопке уезжать или сжиматься */
-    width: 44px;
-    height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid #ddd;
-    border-radius: 50%;
-    background: #fff;
-    padding: 0;
-}
-
-/* ОВЕРЛЕЙ ПОИСКА */
-.full-search-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%; /* Полная высота экрана */
-    background: #fff;
-    /* КРИТИЧНО: Ставим выше, чем .side-panel (3000) и кнопки (3200) */
-    z-index: 5000;
-    display: none; /* Скрыт по умолчанию */
-    flex-direction: column;
-    overflow-y: auto; /* Позволяет скроллить сам поиск, если контента много */
-    /* Плавная анимация появления снизу */
-    animation: slideUpMob 0.3s cubic-bezier(0.2, 0, 0, 1);
-}
-
-    .full-search-overlay.active {
-        display: flex;
-    }
-
-@keyframes slideUpMob {
-    from {
-        transform: translateY(100%);
-    }
-
-    to {
-        transform: translateY(0);
-    }
-}
-
-/* Дополнительно: "причешем" карточки внутри модалки */
-.modal-card {
-    background: #f7f7f7;
-    margin: 0 20px 15px 20px;
-    padding: 15px;
-    border-radius: 16px;
-    border: 1px solid #eee;
-    position: relative; /* Обязательно для привязки списка */
-    z-index: 10;
-}
-
-.segment-label {
-    display: block;
-    font-size: 12px;
-    font-weight: 800;
-    color: #717171;
-    margin-bottom: 5px;
-    text-transform: uppercase;
-}
-
-
- 
-
-/* ЛЕЙАУТ (СПИСОК + КАРТА) */
-.app-layout {
-    display: grid;
-    grid-template-columns: 1fr 450px;
-    height: calc(100vh - 80px);
-}
-
-
-
-main {
-    overflow-y: auto;
-    padding: 25px;
-}
-
-#grid {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding: 10px;
-}
-
-    #grid:has(.no-results) {
-        height: 100%;
-        overflow: hidden !important;
-    }
-
-#main-scroll:has(.no-results) {
-    overflow-y: hidden !important;
-    height: 100% !important;
-}
-
-#y-map {
-    width: 100%;
-    height: 100%;
-    position: sticky;
-    top: 0;
-}
-
-
-
-
-/* КАРТОЧКА ОТЕЛЯ */
-/* Сама карточка становится горизонтальной */
-.hotel-card {
-    display: flex;
-    flex-direction: row;
-    height: 180px; /* Фиксированная высота всей карточки */
-    width: 100%;
-    background: #fff;
-    cursor:pointer;
-    border-radius: 16px;
-    border: 1px solid #ebebe;
-    overflow: hidden;
-    box-sizing: border-box;
-}
-
-.card-image-wrapper {
-    /* ЖЕСТКАЯ ФИКСАЦИЯ ШИРИНЫ */
-    width: 240px !important;
-    min-width: 240px !important;
-    max-width: 240px !important;
-    flex-shrink: 0; /* Запрещает контенту справа "давить" на фото */
-    height: 100%;
-    position: relative;
-    background: #f7f7f7;
-}
-
-    /* Правая часть: Контент */
-    .card-image-wrapper img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover; /* Фото заполняет блок, не растягиваясь */
-        display: block;
-    }
-
-/* Правая часть с контентом */
-.card-body {
-    flex-grow: 1; /* Занимает всё оставшееся место */
-    min-width: 0; /* Критично для работы text-overflow: ellipsis */
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.card-header {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.card-title {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 700;
-    white-space: nowrap; /* Текст в одну строку */
-    overflow: hidden; /* Скрываем то, что не влезло */
-    text-overflow: ellipsis; /* Добавляем три точки (...) */
-    width: 100%;
-}
-
-/* Футер карточки с ценой и кнопкой в один ряд */
-.card-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-}
-
-/* Адаптивность для узких экранов */
-@media (max-width: 480px) {
-    .hotel-card {
-        height: 140px;
-    }
-
-    .card-image-wrapper {
-        width: 140px;
-        min-width: 140px;
-    }
-
-    .card-title {
-        font-size: 16px;
-    }
-}
-
-@media (max-width: 600px) {
-    .hotel-card {
-        height: 140px; /* Чуть ниже на мобилках */
-    }
-
-    .card-image-wrapper {
-        width: 120px !important;
-        min-width: 120px !important;
-        max-width: 120px !important;
-    }
-}
-
-/* Находим первый сегмент "Где" */
-.search-widget-v2 .search-segment:first-child {
-    position: relative !important; /* Устанавливаем точку отсчета для абсолютных детей */
-}
-
-
-/* Блок результатов на десктопе */
-#ac-results {
-    position: absolute !important;
-    top: 55px !important; /* Ровно под поисковой строкой */
-    left: 0 !important;
-    width: 300px !important; /* Фиксированная ширина, чтобы не зависеть от инпута */
-    background: #fff !important;
-    border-radius: 16px !important;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
-    z-index: 100000 !important; /* Максимальный приоритет над картой */
-    max-height: 400px;
-    overflow-y: auto;
-    border: 1px solid #eee;
-}
-
-    #ac-results.hidden {
-        display: none !important;
-    }
-
-.ac-item {
-    padding: 12px 16px;
-    cursor: pointer;
-    font-size: 14px;
-    border-bottom: 1px solid #f7f7f7;
-}
-
-    .ac-item:hover {
-        background: #f7f7f7;
-    }
-
- 
 
 .active-mark {
     background: #222 !important;
@@ -598,893 +714,320 @@ main {
     z-index: 1000;
 }
 
-@media (max-width: 1024px) {
-    .desktop-header {
-        display: none;
-    }
-
-    .mobile-header {
-        display: block;
-    }
-
-    .app-layout {
-        position: fixed; /* Фиксируем на экране */
-        top: 72px; /* Высота вашего хедера */
-        left: 0;
-        right: 0;
-        bottom: 0;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden; /* Запрещаем скролл всему приложению */
-    }
-
-    #y-map {
-        display: none;
-    }
-    /* Можно включить кнопку "Показать карту" */
-}
-
-.hidden {
-    display: none !important;
-}
-
-.counter {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.btn-c {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    border: 1px solid #ccc;
-    background: #fff;
-}
-
-
-
-/* Позволяет календарю позиционироваться относительно сегмента */
-#desk-date-trigger {
+/* ID вашего контейнера карты */
+#y-map {
+    pointer-events: auto !important;
     position: relative;
+    z-index: 1; /* Чтобы быть уверенным, что карта не под фоном */
 }
 
-/* Настройка самого выпадающего окна Flatpickr */
-.flatpickr-calendar.static {
-    top: 100% !important; /* Ровно под сегментом */
-    left: 0 !important;
-    margin-top: 15px; /* Отступ от поисковой строки */
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    border-radius: 20px;
-    border: none;
-}
-
-/* Убираем стрелочку календаря, если она мешает */
-.flatpickr-calendar.hasWeeks, .flatpickr-calendar.hasTime {
-    width: auto !important;
-}
-
-/* Глобальный приоритет для календаря */
-.flatpickr-calendar {
-    z-index: 100000 !important;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.2) !important;
-}
-
-/* Специфические фиксы для мобильной версии */
-@media (max-width: 1024px) {
-    .flatpickr-calendar {
-        position: fixed !important;
-        top: 50% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) !important;
-        margin: 0 !important;
-    }
-
-    /* Затемняющая подложка, чтобы фокус был на календаре */
-    /*.flatpickr-calendar.open::before {
-                    content: '';
-                    position: fixed;
-                    top: -100vh;
-                    left: -100vw;
-                    width: 300vw;
-                    height: 300vh;
-                    background: rgba(0, 0, 0, 0.4);
-                    z-index: -1;
-                }*/
-}
-
-/* Для десктопа: позиционируем под виджетом, если не мобилка */
-@media (min-width: 1025px) {
-    .flatpickr-calendar {
-        margin-top: 10px;
-    }
+/* Убедитесь, что внутри карты элементы тоже принимают клики */
+.ymaps-2-1-79-map, .ymaps-2-1-79-inner-panes {
+    pointer-events: auto !important;
 }
 
 
 
+/* 1. ГЛОБАЛЬНЫЙ КОНТЕЙНЕР БАЛУНА (Удаляем стили Яндекса) */
+.ymaps-2-1-79-balloon__content {
+    padding: 0 !important;
+    margin-right: 0 !important;
+    background: transparent !important;
+}
 
+.ymaps-2-1-79-balloon__layout {
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2) !important;
+    border: none !important;
+}
 
-/* Кнопка переключения */
-.map-mobile-btn {
-    display: none;
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #222;
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 25px;
-    border: none;
-    font-weight: 600;
-    z-index: 1001;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    align-items: center;
+/* 2. НАШ КАРКАС */
+.map-balloon-card {
+    display: flex;
+    background: #fff;
     cursor: pointer;
+    position: relative;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
-#map-toggle-btn,
-.map-mobile-btn {
-    display: none;
+/* ФОТО-БЛОК */
+.bal-photo-side {
+    position: relative;
+    background: #f0f0f0;
+    overflow: hidden;
+    flex-shrink: 0;
 }
 
-
-@media (max-width: 1024px) {
-
-
-    .map-mobile-btn {
-        display: flex !important;
-        /* Увеличиваем размеры */
-        padding: 14px 28px !important;
-        font-size: 16px !important;
-        border-radius: 30px !important;
-        /* Улучшаем визуальный вес */
-        font-weight: 700 !important;
-        letter-spacing: 0.5px;
-        box-shadow: 0 6px 20px rgba(0,0,0,0.3) !important;
-        /* Фиксируем положение чуть выше нижнего края */
-        bottom: 30px !important;
-    }
-
-        .map-mobile-btn svg {
-            width: 20px !important;
-            height: 20px !important;
-            margin-left: 10px !important;
-        }
-
-    /* Состояние, когда карта открыта на весь экран */
-    .show-map #y-map {
-        display: block !important;
-        position: fixed !important;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        z-index: 1000;
-    }
-
-    .show-map main {
-        display: none;
-    }
+.bal-slider {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    scroll-behavior: smooth;
+    overflow-x: hidden; /* Скрываем скролл-бар */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
-.btn-clear {
+.bal-img {
+    object-fit: cover;
+    flex-shrink: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* КНОПКИ ГАЛЕРЕИ */
+.bal-nav {
     position: absolute;
-    right: 5px;
-    background: #ebebeb;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.9);
+    color: #222;
     border: none;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    font-size: 10px;
-    cursor: pointer;
+    font-size: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #222;
-    transition: background 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    cursor: pointer;
+    z-index: 10;
+    pointer-events: auto !important; /* Критично для Яндекса */
 }
 
-    .btn-clear:hover {
-        background: #dddddd;
+    .bal-nav:active {
+        scale: 0.9;
     }
 
-#ac-input-desk {
-    width: 140px !important; /* Подберите нужную ширину */
-    flex-grow: 0 !important;
-}
-
-/* У мобильного инпута крестик чуть больше для удобства */
-#ac-input-mob + .btn-clear {
-    width: 28px;
-    height: 28px;
-    font-size: 14px;
-    right: 0;
-}
-
-@media (max-width: 1024px) {
-    /* Все инпуты в мобильной версии должны быть минимум 16px */
-    input[type="text"],
-    input[type="number"],
-    textarea,
-    .search-segment input,
-    #ac-input-mob {
-        font-size: 16px !important;
+    .bal-nav.prev {
+        left: 6px;
     }
 
-    /* Чтобы текст не казался слишком крупным, можно чуть уменьшить межбуквенное расстояние */
-    #ac-input-mob {
-        letter-spacing: -0.01em;
+    .bal-nav.next {
+        right: 6px;
     }
-}
 
-.btn-filters-main {
+/* ИНФО-БЛОК */
+.bal-info-side {
+    padding: 12px;
     display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor:pointer;
-    height: 58px;
-    padding: 0 16px;
-    border-radius: 12px;
-    border: 1px solid #ddd;
-    background: #fff;
-    font-weight: 600;
-    white-space: nowrap; /* Чтобы текст не переносился */
+    flex-direction: column;
+    min-width: 0; /* Для работы ellipsis */
 }
 
-    .btn-filters-main:hover {
-        background: #f7f7f7;
-        border-color: #222;
+.bal-rating {
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.bal-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bal-meta {
+    font-size: 12px;
+    color: #717171;
+    margin-bottom: 8px;
+}
+
+.bal-price-row {
+    margin-top: auto;
+}
+
+.bal-price-val {
+    font-size: 16px;
+    font-weight: 800;
+    color: #222;
+}
+
+.bal-price-sub {
+    font-size: 12px;
+    color: #717171;
+}
+
+/* 3. АДАПТИВНОСТЬ (RESPONSIVE) */
+
+/* МОБИЛЬНЫЙ ВИД: Горизонтальный (узкий и длинный) */
+@media (max-width: 767px) {
+    .map-balloon-card {
+        width: 280px;
+        height: 100px;
+        flex-direction: row;
     }
 
-/* На мобилках кнопку обычно скрывают из хедера и выносят в другое место, 
-   либо оставляют только иконку */
-@media (max-width: 1024px) {
-    .btn-filters-main span {
-        display: none;
+    .bal-photo-side {
+        width: 100px;
+        height: 100px;
     }
 
-    .btn-filters-main {
-        padding: 0 12px;
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
+    .bal-info-side {
         justify-content: center;
     }
+
+    .bal-nav {
+        width: 22px;
+        height: 22px;
+        font-size: 10px;
+    }
+}
+
+/* ДЕСКТОПНЫЙ ВИД: Вертикальный (как карточка товара) */
+@media (min-width: 768px) {
+    .map-balloon-card {
+        width: 240px;
+        flex-direction: column;
+    }
+
+    .bal-photo-side {
+        width: 240px;
+        height: 150px;
+    }
+
+    .bal-info-side {
+        height: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Контейнер поиска */
+    .search-wrapper {
+        position: fixed; /* Фиксируем поверх всего */
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000; /* Выше, чем у карты (у Яндекса обычно до 500) */
+        background: #fff;
+        padding: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    /* Карта под ним */
+    #y-map {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100dvh;
+        z-index: 1; /* Самый нижний слой */
+    }
+
+    /* Чтобы контент карты (кнопки Яндекса) не залезал под поиск */
+    .ymaps-2-1-79-controls__control {
+        margin-top: 80px !important; /* Сдвигаем кнопки зума ниже поиска */
+    }
 }
 
 
-.btn-mob-filters {
+
+
+
+/* 1. ОБЩИЙ КОНТЕЙНЕР (Центрирует всё содержимое) */
+#pagination {
+    display: flex;
+    flex-direction: column; /* Текст будет под кнопками */
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 40px 16px;
+    width: 100%;
+    box-sizing: border-box;
+    border-top: 1px solid #eee;
+    margin-top: 20px;
+}
+
+/* 2. ГОРИЗОНТАЛЬНЫЙ РЯД КНОПОК (Самый важный блок) */
+.pagination-buttons {
+    display: flex !important;
+    flex-direction: row !important; /* Выстраивает кнопки в линию */
+    align-items: center;
+    justify-content: center;
+    gap: 8px; /* Расстояние между кнопками */
+    flex-wrap: nowrap; /* Запрещаем перенос на новую строку */
+}
+
+/* 3. СТИЛЬ КНОПОК (Круглые, как в Airbnb) */
+.pag-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 44px;
-    height: 44px;
-    background: #fff;
+    min-width: 40px;
+    height: 40px;
+    border-radius: 50%;
     border: 1px solid #ddd;
-    border-radius: 50%;
+    background-color: #fff;
     color: #222;
-    flex-shrink: 0; /* Чтобы кнопка не сжималась */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-    .btn-mob-filters:active {
-        background: #f7f7f7;
-        transform: scale(0.95);
-    }
-
-/* Скрываем её на десктопе, если она случайно там окажется */
-@media (min-width: 1025px) {
-    .btn-mob-filters {
-        display: none;
-    }
-}
-
-
-/* Кнопка закрытия */
-.btn-close {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s ease, transform 0.1s ease;
-    border: none;
-    background: transparent;
-    color: #222;
-    order: -1; /* Ставим крестик слева, как в Airbnb */
-    margin-right: 16px;
+    transition: all 0.2s ease;
+    padding: 0;
+    margin: 0;
+    outline: none;
 }
 
-    /* Эффект наведения */
-    .btn-close:hover {
+    /* Эффекты при наведении */
+    .pag-btn:hover:not(:disabled):not(.active) {
+        border-color: #222;
         background-color: #f7f7f7;
     }
 
-    /* Эффект нажатия */
-    .btn-close:active {
-        transform: scale(0.92);
-    }
-
-    /* Иконка крестика (если используете текст "×" или иконку) */
-    .btn-close svg, .btn-close i {
-        width: 16px;
-        height: 16px;
-    }
-
-/* Для мобилок увеличиваем область нажатия */
-@media (max-width: 768px) {
-    .btn-close {
-        width: 40px;
-        height: 40px;
-    }
-}
-
-
-@media (max-width: 1024px) {
-    #filter-modal .modal-content {
-        width: 100%;
-        height: 100%;
-        border-radius: 0;
-        max-width: none;
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-    }
-
-    /* Сделайте футер модалки фиксированным снизу */
-    .filter-footer {
-        position: sticky;
-        bottom: 0;
-        background: #fff;
-        border-top: 1px solid #eee;
-        padding: 15px 20px;
-        display: flex;
-        justify-content: space-between;
-    }
-}
-
-
-
-
-
-@media (max-width: 1024px) {
-    /* 1. Уменьшаем общий паддинг у контейнера списка */
-    main#main-scroll {
-        padding: 12px 8px !important; /* Было 25px, стало 8px по бокам */
-    }
-
-    /* 2. Убираем лишние отступы у сетки, чтобы карточки были шире */
-    #grid {
-        gap: 12px; /* Уменьшаем расстояние между карточками */
-        padding: 0 !important;
-    }
-
-    /* 3. Опционально: делаем карточки чуть изящнее для узких экранов */
-    .hotel-card {
-        border-radius: 12px; /* Чуть меньше скругление для узких полей */
-        margin-bottom: 4px;
-    }
-
-    /* 4. Заголовок "Москва" тоже прижимаем */
-    h1#res-count-title, .results-header {
-        margin-left: 4px;
-        margin-bottom: 16px;
-    }
-}
-
-
-
-
-#guests-dropdown {
-    position: absolute !important;
-    top: 55px !important; /* Высота виджета + небольшой отступ */
-    /*right: 0 !important;*/ /* Выравнивание по правому краю сегмента "Кто" */
-    left: auto !important; /* Сбрасываем левое позиционирование */
-
-    background: #fff;
-    padding: 20px;
-    border-radius: 24px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-    width: 280px;
-    z-index: 10000; /* Поверх карты и всего контента */
-    border: 1px solid #eee;
-}
-
-
-.search-widget-v2 {
-    overflow: visible !important;
-}
-
-.filter-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 100000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.filter-modal-content {
-    background: #fff;
-    width: 100%;
-    max-width: 560px;
-    height: 90vh;
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-.filter-header {
-    padding: 16px 24px;
-    border-bottom: 1px solid #eee;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.filter-body {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding: 24px;
-}
-
-.filter-section h3 {
-    font-size: 22px;
-    margin-bottom: 8px;
-}
-
-.price-field {
-    border: 1px solid #b0b0b0;
-    padding: 8px 12px;
-    border-radius: 8px;
-    width: fit-content;
-}
-
-    .price-field span {
-        font-size: 12px;
-        color: var(--grey);
-        display: block;
-    }
-
-.type-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-top: 16px;
-}
-
-/* Кнопки в футере */
-.filter-footer {
-    padding: 16px 24px;
-    border-top: 1px solid #eee;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.btn-apply {
-    background: #222;
-    color: #fff;
-    border: none;
-    padding: 14px 24px;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.btn-clear-all {
-    background: none;
-    border: none;
-    text-decoration: underline;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-@media (max-width: 1024px) {
-    .filter-modal-content {
-        height: 100%;
-        max-width: none;
-        border-radius: 0;
-    }
-}
-
-.skeleton {
-    background: #eee;
-    background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
-    border-radius: 12px;
-    background-size: 200% 100%;
-    animation: shine 1.5s linear infinite;
-}
-
-@keyframes shine {
-    to {
-        background-position-right: -200%;
-    }
-
-    0% {
-        background-position: 200% 0;
-    }
-
-    100% {
-        background-position: -200% 0;
-    }
-}
-
-/* Структура карточки-заглушки */
-.skeleton-card {
-    width: 100%;
-    margin-bottom: 24px;
-}
-
-.skeleton-image {
-    height: 200px;
-    width: 100%;
-    margin-bottom: 12px;
-}
-
-.skeleton-text {
-    height: 16px;
-    width: 80%;
-    margin-bottom: 8px;
-}
-
-    .skeleton-text.short {
-        width: 40%;
-    }
-
-.skeleton-price {
-    height: 24px;
-    width: 50%;
-    margin-top: 12px;
-}
-
-
-.top-loader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 0;
-    height: 3px;
-    background: var(--red, #ff385c); /* Ваш фирменный красный */
-    z-index: 10001; /* Поверх всего, даже модалок */
-    transition: width 0.4s ease, opacity 0.4s ease;
-    box-shadow: 0 0 10px rgba(255, 56, 92, 0.5);
-    display: none;
-}
-
-    .top-loader.loading {
-        display: block;
-        animation: loader-progress 2s infinite linear;
-    }
-
-@keyframes loader-progress {
-    0% {
-        width: 0;
-        left: 0;
-    }
-
-    50% {
-        width: 70%;
-        left: 15%;
-    }
-
-    100% {
-        width: 100%;
-        left: 100%;
-    }
-}
-
-
-.no-results {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 60px 20px;
-    text-align: center;
-    color: #222;
-    width: 100%;
-}
-
-    .no-results svg {
-        margin-bottom: 20px;
-        color: #717171;
-    }
-
-    .no-results h2 {
-        font-size: 22px;
-        font-weight: 600;
-        margin-bottom: 8px;
-    }
-
-    .no-results p {
-        font-size: 16px;
-        color: #717171;
-        margin-bottom: 24px;
-    }
-
-.btn-reset-filters {
-    background: #222;
-    color: #fff;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-    .btn-reset-filters:active {
-        transform: scale(0.95);
-    }
-
-
-.breadcrumb-area {
-    padding: 16px 4px 24px 4px;
-    border-bottom: 1px solid #ebebeb;
-    margin-bottom: 24px;
-}
-
-/* Хлебные крошки */
-.breadcrumbs {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    color: #222;
-    margin-bottom: 8px;
-}
-
-    .breadcrumbs a {
-        text-decoration: none;
-        color: inherit;
-        transition: text-decoration 0.2s;
-    }
-
-        .breadcrumbs a:hover {
-            text-decoration: underline;
-        }
-
-.br-sep {
-    color: #717171;
-    font-size: 10px;
-}
-
-.br-current {
-    font-weight: 600;
-}
-
-/* Заголовок H1 */
-.main-h1 {
-    font-size: 24px;
-    font-weight: 800;
-    line-height: 30px;
-    margin: 0 0 8px 0;
-    color: #222;
-}
-
-.h1-subtitle {
-    font-size: 14px;
-    color: #717171;
-    margin: 0;
-}
-
-/* Мобильная адаптация */
-@media (max-width: 768px) {
-    .main-h1 {
-        font-size: 20px;
-    }
-
-    .breadcrumbs {
-        font-size: 12px;
-    }
-}
-
-.pagination-area {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    padding: 40px 0;
-    border-top: 1px solid #eee;
-}
-
-.pg-btn {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 1px solid #ddd;
-    background: #fff;
-    color: #222;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-    .pg-btn:hover {
-        border-color: #222;
-        background: #f7f7f7;
-    }
-
-    .pg-btn.active {
-        background: #222;
+    /* Активная страница (черный фон) */
+    .pag-btn.active {
+        background-color: #222;
         color: #fff;
         border-color: #222;
+        cursor: default;
     }
 
-    .pg-btn:disabled {
+    /* Заблокированные стрелки */
+    .pag-btn:disabled {
         color: #ccc;
-        cursor: not-allowed;
         border-color: #eee;
+        cursor: not-allowed;
     }
 
-
-.pg-dots {
+/* 4. ТОЧКИ (...) */
+.pag-dots {
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     justify-content: center;
-    width: 30px;
-    height: 40px;
+    width: 32px;
     color: #717171;
-    font-weight: 600;
-    padding-bottom: 8px;
+    font-size: 14px;
+    letter-spacing: 1px;
 }
 
-/* Улучшим кнопки для мобилок (чтобы не были слишком мелкими) */
-@media (max-width: 768px) {
-    .pg-btn {
-        width: 36px;
+/* 5. ИНФО-ТЕКСТ (Снизу под кнопками) */
+.pagination-info {
+    font-size: 13px;
+    color: #717171;
+    font-weight: 400;
+    text-align: center;
+}
+
+/* АДАПТИВНОСТЬ ДЛЯ МОБИЛОК */
+@media (max-width: 480px) {
+    .pagination-buttons {
+        gap: 4px;
+    }
+
+    .pag-btn {
+        min-width: 36px;
         height: 36px;
         font-size: 13px;
     }
-
-    .pagination-area {
-        gap: 4px;
-        padding: 24px 0;
-    }
-}
-
-.hotel-card:hover {
-    border-color: #222;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
-    z-index: 10;
-}
-
-/* Каждый отдельный сегмент (Где, Когда, Кто) */
-.search-segment {
-    cursor: pointer !important;
-    transition: background-color 0.2s ease;
-}
-
-    /* Инпуты внутри сегментов, чтобы текстовый курсор (I-beam) не перекрывал поинтер */
-    .search-segment input,label { 
-
-        cursor: pointer !important;
-    }
-     
-    
-/* Кнопка поиска (лупа) */
-.btn-search-v2 {
-    cursor: pointer;
-}
-
-/* Эффект при наведении на сегмент (стиль Airbnb) */
-.search-segment:hover {
-    background-color: #f7f7f7;
-    border-radius: 32px;
-}
-
-/* Мобильная заглушка (Stub) */
-.search-stub {
-    cursor: pointer;
 }
 
 
-/* --- БАЗОВАЯ АНИМАЦИЯ МЕРЦАНИЯ --- */
-@keyframes skeleton-blink {
-    0% {
-        background-color: #f0f0f0;
-    }
-
-    50% {
-        background-color: #e0e0e0;
-    }
-
-    100% {
-        background-color: #f0f0f0;
-    }
-}
-
-.skeleton {
-    animation: skeleton-blink 1.5s infinite ease-in-out;
-    border-radius: 4px;
-    background-color: #f0f0f0;
-}
-
-@media (max-width: 767px) {
-    /* Контейнер карточки становится горизонтальным */
-    .skeleton-card {
-        display: flex;
-        flex-direction: row; /* В ряд вместо колонки */
-        align-items: flex-start;
-        gap: 12px;
-        min-height: 120px; /* Уменьшаем общую высоту */
-        padding: 10px;
-        border-radius: 12px;
-    }
-
-    /* Изображение слева (квадратное или небольшое прямоугольное) */
-    .skeleton-image {
-        width: 100px; /* Фиксированная ширина */
-        height: 100px; /* Фиксированная высота */
-        flex-shrink: 0; /* Чтобы не сжималось */
-        border-radius: 8px;
-    }
-
-    /* Правая часть с контентом */
-    .skeleton-info {
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-        gap: 8px;
-        height: 100px;
-        justify-content: space-between;
-    }
-
-    .skeleton-text {
-        height: 14px;
-        width: 90%;
-        margin: 0;
-    }
-
-        .skeleton-text.short {
-            width: 40%;
-        }
-
-    /* Футер (цена и кнопка) внутри правой части */
-    .skeleton-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: auto;
-        width: 100%;
-    }
-
-    .skeleton-price {
-        width: 50px;
-        height: 16px;
-    }
-
-    .skeleton-btn {
-        width: 70px;
-        height: 28px;
-        border-radius: 6px;
-    }
-}
-
-/* --- ФИКС ДЛЯ МОБИЛОК: Убираем лишние отступы --- */
-@media (max-width: 480px) {
-    .skeleton-card {
-        padding: 0px;
-        border-radius: 12px;
-    }
-
-    #grid {
-        padding: 0px;
-        gap: 15px;
-    }
-}
 
 
 /* Контейнер выпадающего списка */
@@ -1560,663 +1103,247 @@ main {
     }
 }
 
-.search-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.05); /* Легкое затемнение */
-    z-index: 900; /* Должен быть ниже поиска (1000), но выше карты и контента */
-    cursor: default;
-}
-
  
-
-/* Когда подложка активна, мы можем визуально выделить поиск */
-.search-segment.is-active,
 #ac-results,
 #ac-results-mob,
-#guests-dropdown {
-    position: relative; /* или absolute для выпадашек */
-    z-index: 1000 !important;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-.app-footer {
-    border-top: 1px solid var(--light-grey);
-    padding: 24px 0 40px 0;
-    margin-top: 60px;
-    background-color: #fff;
-}
-
-.footer-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 20px;
-    color: #222;
-    font-size: 14px;
-}
-
-.footer-section {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-    .footer-section a {
-        text-decoration: none;
-        color: #222;
-        transition: underline 0.2s;
-    }
-
-        .footer-section a:hover {
-            text-decoration: underline;
-        }
-
-.dot {
-    color: var(--grey);
-    font-size: 10px;
-}
-
-.copyright {
-    color: #222;
-}
-
-.footer-btn {
-    background: none;
-    border: none;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 14px;
-    color: #222;
-}
-
-.social-links {
-    display: flex;
-    gap: 15px;
-    margin-left: 10px;
-}
-
-    .social-links a {
-        font-weight: 600;
-    }
-
-/* Адаптивность для мобилок */
-@media (max-width: 768px) {
-    .footer-container {
-        flex-direction: column-reverse;
-        align-items: flex-start;
-        padding: 0 20px;
-    }
-
-    .main-info {
-        flex-wrap: wrap;
-        gap: 8px;
-    }
-}
-
-
-
-
-
-
-
-.header-actions {
-    position: relative;
-    margin-left: 12px;
-}
-
-.btn-menu-only {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 0 16px;
-    height: 48px; /* Высота под ваш поиск */
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 24px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    color: #222;
-}
-
-    .btn-menu-only:hover {
-        background-color: #f7f7f7;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-/* Выпадающее меню */
-.menu-dropdown {
+#guests-dropdown,
+.flatpickr-calendar {
     position: absolute;
-    top: 56px;
-    right: 0;
-    width: 200px;
+    top: 110% !important; /* Чуть ниже строки поиска */
+    left: 0;
+    z-index: 1100 !important; /* Самый верхний слой */
     background: #fff;
-    border: 1px solid var(--light-grey);
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    padding: 8px 0;
-    z-index: 1100;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    border: 1px solid #ebebeb;
 }
 
-    .menu-dropdown.hidden {
-        display: none;
-    }
 
-.menu-item {
-    display: block;
-    padding: 10px 16px;
-    font-size: 14px;
+.btn-clear {
+    position: absolute;
+    right: 5px;
+    background: #ebebeb;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: #222;
-    text-decoration: none;
     transition: background 0.2s;
 }
 
-    .menu-item:hover {
-        background: #f4f4f4;
+    .btn-clear:hover {
+        background: #dddddd;
     }
 
-hr {
-    border: 0;
-    border-top: 1px solid #eee;
-    margin: 8px 0;
+#ac-input-desk {
+    width: 140px !important; /* Подберите нужную ширину */
+    flex-grow: 0 !important;
 }
 
-.card-type-stars {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.card-stars {
-    color: #FFB100;
-    font-size: 11px;
-    letter-spacing: 1px;
-}
-
-/* Локация */
-.card-location-row {
-    margin-top: 6px;
-    font-size: 13px;
-    display: flex;
-    gap: 8px;
-    color: #717171;
-}
-
-.card-city {
-    font-weight: 700;
-    color: #222;
-}
-
-/* Цена */
-.card-price-container {
-    display: flex;
-    flex-direction: column;
-}
-
-.card-price-main {
-    font-size: 18px;
-    font-weight: 800;
-    color: #222;
-}
-
-.card-price-sub {
-    font-size: 11px;
-    color: #717171;
-    margin-top: -2px;
-}
-
-/* Бейдж сверху на фото */
-.card-badge-top {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    background: #fff;
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 11px;
-    font-weight: 800;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    color: #ff385c;
-}
-
-.btn-select-hotel {
-    /* Сброс стилей */
-    border: none;
-    outline: none;
-    cursor: pointer;
-    /* Размеры и форма */
-    padding: 10px 18px;
-    border-radius: 8px;
+/* У мобильного инпута крестик чуть больше для удобства */
+#ac-input-mob + .btn-clear {
+    width: 28px;
+    height: 28px;
     font-size: 14px;
-    font-weight: 600;
-    /* Цвета (Акцентный красный/коралловый) */
-    background: #ff385c;
-    color: #ffffff;
-    /* Анимация */
-    transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
-    /* Центрирование внутри флекса */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /* Тень */
-    box-shadow: 0 2px 8px rgba(255, 56, 92, 0.2);
+    right: 0;
 }
 
-    /* Эффект при наведении */
-    .btn-select-hotel:hover {
-        background: #e31c5f;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(255, 56, 92, 0.3);
-    }
-
-    /* Эффект при клике */
-    .btn-select-hotel:active {
-        transform: scale(0.96);
-        background: #bd1e59;
-    }
-
-    /* Если кнопка должна быть черной (альтернативный вариант) */
-    .btn-select-hotel.dark {
-        background: #222;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-        .btn-select-hotel.dark:hover {
-            background: #000;
-        }
-
-
-@media (max-width: 768px) {
-    /* Основной контейнер карточки */
-    .hotel-card {
-        display: flex !important;
-        flex-direction: row !important; /* Ряд вместо колонки */
-        align-items: stretch;
-        height: 140px; /* Фиксированная высота для аккуратного списка */
-        padding: 10px;
-        gap: 12px;
-        margin-bottom: 10px;
-        background: #fff;
-        border-radius: 16px;
-        border: 1px solid #f0f0f0;
-    }
-
-    /* Уменьшенное фото слева */
-    .card-image-wrapper {
-        width: 110px !important;
-        min-width: 110px !important;
-        height: 100% !important;
-        margin: 0 !important;
-        border-radius: 10px;
-        overflow: hidden;
-        position: relative;
-    }
-
-        .card-image-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-    /* Контентная часть справа */
-    .card-body {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        padding: 0 !important;
-        min-width: 0; /* Важно для обрезания длинного текста */
-    }
-
-    /* Заголовок (максимум 2 строки) */
-    .card-title {
-        font-size: 15px !important;
-        line-height: 1.2;
-        margin: 2px 0 4px 0 !important;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-
-    /* Мета-данные (Тип, Звезды, Рейтинг) */
-    .card-header-row {
-        margin-bottom: 0;
-    }
-
-    .card-type-stars {
-        font-size: 11px;
-    }
-
-    .card-stars {
-        font-size: 9px;
-    }
-
-    .card-rating-box {
-        position: absolute;
-        bottom: 6px;
-        left: 6px;
-        background: rgba(255, 255, 255, 0.9);
-        padding: 2px 6px;
-        border-radius: 4px;
-        font-size: 10px;
-        font-weight: 800;
-    }
-
-    /* Скрываем лишние детали на мобильных для чистоты */
-    .card-dist {
-        font-size: 11px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    /* Нижняя часть (Цена + Кнопка) */
-    .card-footer {
-        display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-        margin-top: auto;
-    }
-
-    .card-price-main {
+@media (max-width: 1024px) {
+    /* Все инпуты в мобильной версии должны быть минимум 16px */
+    input[type="text"],
+    input[type="number"],
+    textarea,
+    .search-segment input,
+    #ac-input-mob {
         font-size: 16px !important;
-        letter-spacing: -0.5px;
     }
 
-    .btn-select-hotel {
-        padding: 6px 12px !important;
-        font-size: 12px !important;
-        height: 32px;
-        border-radius: 6px;
-    }
-
-    /* Бейдж "Выбор гостей" на мобильных делаем меньше */
-    .card-badge-top {
-        display: none; /* Часто на таких маленьких фото он лишний, либо уменьшить: */
-        /* font-size: 8px; padding: 2px 4px; top: 4px; left: 4px; */
+    /* Чтобы текст не казался слишком крупным, можно чуть уменьшить межбуквенное расстояние */
+    #ac-input-mob {
+        letter-spacing: -0.01em;
     }
 }
 
 
-/* --- 1. ОБНУЛЕНИЕ СТАНДАРТНОГО БАЛУНА ЯНДЕКСА --- */
-/* Убираем внутренние поля, чтобы фото прилегало к краям */
-.ymaps-2-1-79-balloon__content {
-    padding: 0 !important;
-    margin-right: 0 !important;
-    background-color: #fff !important;
-    border-radius: 12px !important;
-    overflow: hidden !important;
-}
-
-/* Скрываем стандартную кнопку закрытия Яндекса (мы сделали свою на фото) */
-.ymaps-2-1-79-balloon__close {
-    display: none !important;
-}
-
-/* Убираем лишние тени и обертки Яндекса */
-.ymaps-2-1-79-balloon__layout {
-    border-radius: 12px !important;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
-    border: none !important;
-}
-
-/* --- 2. НАШ КАСТОМНЫЙ ВЕРТИКАЛЬНЫЙ БАЛУН --- */
-.map-balloon-vertical {
-    width: 220px; /* Фиксированная ширина */
-    display: flex;
-    flex-direction: column;
-    cursor: pointer;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-}
-
-/* Верхняя часть с фото */
-.balloon-img-top {
+.card-photo-wrapper {
     position: relative;
-    width: 100%;
-    height: 130px;
-    background: #f0f0f0;
+    height: 200px;
+    border-radius: 12px;
     overflow: hidden;
+    background: #f3f3f3;
 }
 
-    .balloon-img-top img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-        transition: transform 0.3s ease;
-    }
-
-    .balloon-img-top:hover img {
-        transform: scale(1.05);
-    }
-
-/* Кастомный крестик на фото */
-.balloon-close-btn {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    width: 26px;
-    height: 26px;
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(4px); /* Эффект размытия 2026 */
-    -webkit-backdrop-filter: blur(4px);
-    border: none;
-    border-radius: 50%;
-    color: #222;
-    font-size: 20px;
+.card-slider {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 10;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    padding: 0;
-    line-height: 1;
-}
-
-    .balloon-close-btn:hover {
-        background: #fff;
-        transform: scale(1.1);
-    }
-
-/* Рейтинг на фото */
-.balloon-rating-badge {
-    position: absolute;
-    bottom: 8px;
-    left: 8px;
-    background: #fff;
-    padding: 2px 8px;
-    border-radius: 6px;
-    font-size: 11px;
-    font-weight: 800;
-    color: #222;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-/* Инфо-блок под фото */
-.balloon-info-bottom {
-    padding: 12px;
-    background: #fff;
-}
-
-.balloon-title {
-    font-size: 14px;
-    font-weight: 700;
-    color: #222;
-    margin-bottom: 4px;
-    line-height: 1.3;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.balloon-meta {
-    font-size: 12px;
-    color: #717171;
-    margin-bottom: 8px;
-}
-
-.balloon-price-row {
-    display: flex;
-    align-items: baseline;
-    gap: 4px;
-}
-
-.price-val {
-    font-size: 16px;
-    font-weight: 800;
-    color: #222;
-}
-
-.price-sub {
-    font-size: 11px;
-    color: #717171;
-}
-
-/* Контейнер слайдов */
-.balloon-slides-container {
-    display: flex;
-    width: 100%;
-    height: 130px;
     overflow-x: auto;
-    scroll-snap-type: x mandatory;
+    scroll-snap-type: x mandatory; /* Прилипание к картинке */
     scroll-behavior: smooth;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    width: 100%;
+    height: 100%;
 }
 
-    .balloon-slides-container::-webkit-scrollbar {
+    /* Прячем скроллбар */
+    .card-slider::-webkit-scrollbar {
         display: none;
     }
 
-.balloon-slide {
-    flex: 0 0 100%;
-    width: 100%;
-    height: 100%;
-    scroll-snap-align: start;
+.card-slider {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
-    .balloon-slide img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-    }
+.card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    cursor: pointer;
+}
 
-/* Кнопки навигации в балуне */
-.balloon-nav {
+/* Кнопки появляются только при наведении на карточку */
+.card-nav {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 28px;
-    height: 28px;
-    background: rgba(255, 255, 255, 0.8);
-    border: none;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    font-size: 12px;
-    cursor: pointer;
-    z-index: 15;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    transition: 0.2s;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 2;
 }
 
-    .balloon-nav:hover {
-        background: #fff;
-        transform: translateY(-50%) scale(1.1);
-    }
-
-    .balloon-nav.prev {
-        left: 8px;
-    }
-
-    .balloon-nav.next {
-        right: 8px;
-    }
-
-/* Фикс: чтобы кнопки не перекрывались крестиком */
-.balloon-close-btn {
-    z-index: 20; /* Крестик всегда выше кнопок слайдера */
+.hotel-card:hover .card-nav {
+    opacity: 1;
 }
 
-@media (min-width: 1280px) {
-    .app-layout {
-        display: grid;
-        grid-template-columns: 1fr 600px;
-        height: calc(100vh - 80px);
-    }
+.card-nav.prev {
+    left: 8px;
 }
 
-@media (min-width: 1024px) {
-    .app-layout {
-        display: grid;
-        grid-template-columns: 1fr 600px;
-        height: calc(100vh - 80px);
-    }
+.card-nav.next {
+    right: 8px;
 }
 
-
-#mob-search-icon-box svg {
-    transition: transform 0.2s ease, opacity 0.2s ease;
-}
-
-    /* Эффект при нажатии на стрелку */
-    #mob-search-icon-box svg:active {
-        transform: scale(0.8);
-        opacity: 0.6;
-    }
-
-/* Чтобы текст в хедере не прыгал */
-#mob-stub-title {
-    transition: all 0.2s ease;
-}
-
-
-#ac-results-mob {
+.card-badge {
     position: absolute;
-    top: 100%; /* Появляется ровно под инпутом */
-    left: 0;
-    width: 100%;
-    background: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15); /* Тень, чтобы отделить от нижних карточек */
-    margin-top: 5px;
-    border: 1px solid #eee;
-    z-index: 1000; /* Выше всех остальных модальных карточек */
-    
-    /* Ограничиваем высоту, чтобы не ушло за экран */
-    max-height: 280px; 
-    overflow-y: auto;
+    top: 12px;
+    right: 12px;
+    background: rgba(255,255,255,0.9);
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 12px;
 }
 
-/* Когда список открыт, поднимаем приоритет текущей карточки */
-.modal-card:focus-within {
-    z-index: 1001;
+
+.card-dots {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+    z-index: 5;
+    pointer-events: none; /* Чтобы точки не мешали кликать по фото */
 }
 
-/* Скрываем список */
-#ac-results-mob.hidden {
-    display: none;
+.dot {
+    width: 6px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
+
+    .dot.active {
+        background: #fff;
+        transform: scale(1.3);
+        opacity: 1;
+    }
+
+/* Скрываем точки на десктопе, если карточка не в ховере (опционально) */
+.card-dots {
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.hotel-card:hover .card-dots {
+    opacity: 1;
+}
+
+/* В основном блоке CSS убедитесь, что дотсы видны всегда или по умолчанию */
+.card-dots {
+    opacity: 1 !important; /* На мобилках всегда видны */
+    display: flex;
+    pointer-events: none;
+}
+
+/* Кнопки навигации (стрелки) на мобилках обычно скрывают, 
+   так как там используют свайп пальцем. 
+   Но если они нужны — включите их: */
+@media (max-width: 768px) {
+     
+
+    .card-photo-wrapper {
+        height: 180px; /* Уточняем высоту для мобильных */
+    }
+}
+
+
+@media (max-width: 768px) {
+    .card-nav {
+        /* 1. Сброс всех системных стилей кнопок */
+        -webkit-appearance: none;
+        appearance: none;
+        padding: 0 !important;
+        margin: 0 !important;
+        /* 2. Принудительно одинаковые размеры */
+        width: 30px !important;
+        height: 30px !important;
+        min-width: 30px !important;
+        min-height: 30px !important;
+        /* 3. Идеальное скругление */
+        border-radius: 50% !important;
+        /* 4. Центрирование иконки (стрелки) */
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        /* 5. Позиционирование */
+        top: 50%;
+        transform: translateY(-50%) !important; /* Ровно по центру */
+        /* 6. Визуал */
+        background: rgba(255, 255, 255, 0.9) !important;
+        border: 1px solid rgba(0,0,0,0.05) !important;
+        font-size: 12px;
+        opacity: 1 !important; /* Всегда видны на таче */
+        z-index: 10;
+        /* Убираем синее выделение при клике на iOS */
+        -webkit-tap-highlight-color: transparent;
+    }
+
+        .card-nav.prev {
+            left: 8px !important;
+        }
+
+        .card-nav.next {
+            right: 8px !important;
+        }
+}
+
+
+
+
+
+ 
